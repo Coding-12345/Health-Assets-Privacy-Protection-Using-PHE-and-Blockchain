@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Encryption</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            margin: auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        pre {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            margin: 10px 0;
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>Enter Data to Encrypt</h1>
+        <form id="dataForm">
+            <label for="data">Comma-separated values:</label>
+            <input type="text" id="data" name="data" required>
+            <button type="submit">Encrypt</button>
+        </form>
+        <h2>Encrypted Data:</h2>
+        <pre id="result"></pre>
+        <a id="downloadData" href="#" style="display:none;">Download data.json</a><br>
+        <a id="downloadKeys" href="/download/keys.json" style="display:none;">Download keys.json</a>
+    </div>
+
+    <script>
+        document.getElementById('dataForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const data = document.getElementById('data').value.split(',').map(Number);
+            const response = await fetch('/encrypt', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ data })
+            });
+            const result = await response.json();
+            document.getElementById('result').innerText = result.message;
+
+            document.getElementById('downloadData').style.display = 'block';
+            document.getElementById('downloadData').href = '/download/data.json';
+            document.getElementById('downloadKeys').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
